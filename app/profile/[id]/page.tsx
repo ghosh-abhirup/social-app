@@ -1,3 +1,4 @@
+import Feed from "@/app/components/Feed";
 import LeftMenu from "@/app/components/LeftMenu";
 import { RightMenu } from "@/app/components/RightMenu";
 import Image from "next/image";
@@ -9,7 +10,7 @@ const ProfilePage = () => {
         <LeftMenu type="profile" />
       </div>
       <div className="w-full lg:w-[70%] xl:w-[50%]">
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           <div className="flex flex-col items-center justify-center">
             <div className="w-full h-64 relative">
               <Image fill src={"https://images.pexels.com/photos/28758823/pexels-photo-28758823/free-photo-of-serene-backlit-forest-landscape-in-autumn.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"} alt="user" className=" object-cover" />
@@ -23,8 +24,25 @@ const ProfilePage = () => {
               />
             </div>
 
-            <h1 className="mt-20 mb-4 text-2xl font-medium">User name</h1>
+            <h1 className="mt-20 text-2xl font-medium">User name</h1>
           </div>
+
+          <div className="flex items-center justify-center gap-12">
+            <div className="flex flex-col gap-2 items-center">
+              <p className="font-medium">123</p>
+              <p className="text-sm">Posts</p>
+            </div>
+            <div className="flex flex-col gap-2 items-center">
+              <p className="font-medium">123</p>
+              <p className="text-sm">Followers</p>
+            </div>
+            <div className="flex flex-col gap-2 items-center">
+              <p className="font-medium">123</p>
+              <p className="text-sm">Following</p>
+            </div>
+          </div>
+
+          <Feed />
         </div>
       </div>
       <div className="hidden lg:block w-[30%]">
