@@ -1,0 +1,133 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id
+  username  String   @unique
+  avatar    String?
+  coverPic  String?
+  firstName String?
+  lastName  String?
+  desc      String?
+  city      String?
+  work      String?
+  website   String?
+  createdAt DateTime @default(now())
+
+  posts    Post[]
+  likes    Like[]
+  comments Comment[]
+
+  followers  Follower[] @relation("UserFollowers")
+  followings Follower[] @relation("UserFollowings")
+
+  followRequestsRecieved FollowerRequests[] @relation("FollowRequestsRecieved")
+  followRequestsSent     FollowerRequests[] @relation("FollowRequestsSent")
+
+  blocked   BlockRequests[] @relation("BlockRequestSent")
+  blockedBy BlockRequests[] @relation("BlockRequestRecieved")
+
+  stories Stories[]
+}
+
+model Post {
+  id   Int    @id @default(autoincrement())
+  desc String
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  userID String
+  user   User   @relation(fields: [userID], references: [id], onDelete: Cascade)
+
+  likes    Like[]
+  comments Comment[]
+}
+
+model Comment {
+  id   Int    @id @default(autoincrement())
+  desc String
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  userID String
+  postID Int
+
+  user  User   @relation(fields: [userID], references: [id], onDelete: Cascade)
+  post  Post   @relation(fields: [postID], references: [id], onDelete: Cascade)
+  likes Like[]
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  userID    String
+  postID    Int
+  commentID Int
+  user      User    @relation(fields: [userID], references: [id], onDelete: Cascade)
+  post      Post    @relation(fields: [postID], references: [id], onDelete: Cascade)
+  comment   Comment @relation(fields: [commentID], references: [id], onDelete: Cascade)
+}
+
+model Follower {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  followerID String
+  follower   User   @relation("UserFollowers", fields: [followerID], references: [id], onDelete: Cascade)
+
+  followingID String
+  following   User   @relation("UserFollowings", fields: [followingID], references: [id], onDelete: Cascade)
+}
+
+model FollowerRequests {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  senderID String
+  sender   User   @relation("FollowRequestsSent", fields: [senderID], references: [id], onDelete: Cascade)
+
+  recieverID String
+  reciever   User   @relation("FollowRequestsRecieved", fields: [recieverID], references: [id], onDelete: Cascade)
+
+  @@unique([recieverID, senderID])
+}
+
+model BlockRequests {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  blockerID String
+  blocker   User   @relation("BlockRequestSent", fields: [blockerID], references: [id], onDelete: Cascade)
+
+  blockedID String
+  blocked   User   @relation("BlockRequestRecieved", fields: [blockedID], references: [id], onDelete: Cascade)
+
+  @@unique([blockerID, blockedID])
+}
+
+model Stories {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  img       String
+
+  userID String @unique
+  user   User   @relation(fields: [userID], references: [id], onDelete: Cascade)
+
+  // can add likes and comments in future
+}

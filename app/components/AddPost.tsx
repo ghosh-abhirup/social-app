@@ -1,5 +1,7 @@
 import Image from "next/image";
 import React from "react";
+import prisma from "../lib/client";
+import { auth as clerkAuth } from "@clerk/nextjs/server";
 
 const AddPost = () => {
   return (
@@ -7,10 +9,11 @@ const AddPost = () => {
       <Image width={48} height={48} src={"https://images.pexels.com/photos/28995805/pexels-photo-28995805/free-photo-of-misty-autumn-landscape-in-norwegian-forest.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"} alt="user" className="w-12 h-12 rounded-full object-cover" />
 
       <div className="flex-1">
-        <div className="flex gap-4 w-full">
-          <textarea placeholder="What's on your mind?" className="bg-slate-100 rounded-lg p-2 flex-1 font-semibold text-xs" style={{ resize: "none" }} name="" id=""></textarea>
+        <form action={""} className="flex gap-4 w-full">
+          <textarea placeholder="What's on your mind?" name="description" className="bg-slate-100 rounded-lg p-2 flex-1 font-semibold text-xs" style={{ resize: "none" }}></textarea>
           <Image width={20} height={20} src={"/emoji.png"} alt="emoji" className="self-end w-5 h-5 cursor-pointer" />
-        </div>
+          <button>Post</button>
+        </form>
 
         <div className="flex items-center gap-4 mt-4 text-gray-400 flex-wrap">
           <div className="flex items-center gap-2 cursor-pointer">
